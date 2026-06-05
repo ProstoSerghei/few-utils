@@ -45,9 +45,9 @@
 function parseNumbersAverage(text) {
     const normalized = text
         .replace(/,/g, '.')
-        .replace(/[–——]/g, '-');
+        .replace(/[–—]/g, '-');
 
-    const matches = normalized.match(/[+-]?\d+(?:\.\d+)?/g);
+    const matches = normalized.match(/\d+(?:\.\d+)?/g);
 
     if (!matches || matches.length === 0) {
         return '';
