@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Расчёт множителей</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h1 class="h4 mb-4">Расчёт множителей</h1>
+
+            <div id="rows"></div>
+
+            <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-outline-primary" onclick="addRow()">
+                    Добавить строку
+                </button>
+
+                <button class="btn btn-outline-danger" onclick="removeRow()">
+                    Удалить строку
+                </button>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Общее значение</label>
+                <input id="target" type="number" class="form-control" value="100" step="any">
+            </div>
+
+            <button class="btn btn-primary" onclick="calculate()">
+                Рассчитать
+            </button>
+
+            <div id="result" class="mt-4"></div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function addRow(note = '', value = '') {
+    const rows = document.getElementById('rows');
+
+    const div = document.createElement('div');
+    div.className = 'row g-2 mb-2 calc-row';
+
+    div.innerHTML = `
+        <div class="col-md-8">
+            <input
+                type="text"
+                class="form-control note"
+                placeholder="Примечание"
+                value="${note}"
+            >
+        </div>
+
+        <div class="col-md-4">
+            <input
+                type="number"
+                step="any"
+                class="form-control value"
+                placeholder="Значение"
+                value="${value}"
+            >
+        </div>
+    `;
+
+    rows.appendChild(div);
+}
+
+function removeRow() {
+    const rows = document.querySelectorAll('.calc-row');
+    if (rows.length > 1) {
+        rows[rows.length - 1].remove();
+    }
+}
+
+function calculate() {
+    const target = parseFloat(document.getElementById('target').value);
+
+    if (isNaN(target)) {
+        alert('Укажите общее значение');
+        return;
+    }
+
+    const rows = document.querySelectorAll('.calc-row');
+
+    let html = `
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Примечание</th>
+                    <th>Значение</th>
+                    <th>Множитель</th>
+                    <th>Результат</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    rows.forEach(row => {
+        const note = row.querySelector('.note').value || '-';
+        const value = parseFloat(row.querySelector('.value').value);
+
+        if (isNaN(value) || value === 0) return;
+
+        const multiplier = target / value;
+
+        html += `
+            <tr>
+                <td>${note}</td>
+                <td>${value}</td>
+                <td>${multiplier.toFixed(10)}</td>
+                <td>${(value * multiplier).toFixed(10)}</td>
+            </tr>
+        `;
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('result').innerHTML = html;
+}
+
+addRow('Первое значение');
+addRow('Второе значение');
+addRow('Третье значение');
+</script>
+
+</body>
+</html>
